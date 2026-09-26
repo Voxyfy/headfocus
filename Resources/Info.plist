@@ -8,6 +8,8 @@
 	<string>HeadFocus</string>
 	<key>CFBundleExecutable</key>
 	<string>HeadFocus</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.batuhanhaymana.headfocus</string>
 	<key>CFBundleName</key>
@@ -17,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>0.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>202609261052</string>
+	<string>202609261115</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
 	<key>LSUIElement</key>
