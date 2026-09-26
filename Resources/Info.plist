@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key><string>tr</string>
+    <key>CFBundleExecutable</key><string>HeadFocus</string>
+    <key>CFBundleIdentifier</key><string>com.rodosgrup.headfocus</string>
+    <key>CFBundleName</key><string>HeadFocus</string>
+    <key>CFBundleDisplayName</key><string>HeadFocus</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>0.1.0</string>
+    <key>CFBundleVersion</key><string>1</string>
+    <key>LSMinimumSystemVersion</key><string>14.0</string>
+    <key>LSUIElement</key><true/>
+    <key>NSHighResolutionCapable</key><true/>
+    <key>NSMotionUsageDescription</key>
+    <string>Kafanın yönünü AirPods üzerinden okuyup ekranın baktığın tarafını netleştirmek ve odak modunda ekrandan uzaklaştığını anlamak için.</string>
+</dict>
+</plist>
