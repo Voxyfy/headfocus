@@ -1,57 +1,107 @@
 # HeadFocus
 
+<p align="center"><img src="docs/promo.png" width="720" alt="HeadFocus: kafanı çevirdiğin tarafın tersi buğulanıyor"></p>
+
 AirPods'un kafa takibini kullanan küçük bir macOS menü çubuğu uygulaması.
-Kafanı hangi tarafa çevirirsen ekranın **öbür** tarafı cam gibi bulanır;
-odak modunda ekrandan uzaklaşınca sayaç durur ve ekran tamamen bulanır.
+Kafanı hangi tarafa çevirirsen ekranın **öbür** tarafı cam gibi buğulanır;
+odak modunda ekrandan uzaklaşınca sayaç durur, dönünce kaldığı yerden sürer.
 
-Fikir: bakmadığın yerde dikkat dağıtacak bir şey kalmasın.
+## Amaç
 
-## Gereksinimler
+Büyük ekranda çalışırken dikkat sürekli bakmadığın tarafa kaçar: bildirim,
+açık kalan sohbet, arka plandaki video. HeadFocus bunu donanımla değil
+alışkanlıkla çözüyor: baktığın yer net, bakmadığın yer buğulu. Ekrana
+dönmek için ekstra bir şey yapmıyorsun, kafanı çevirmen yetiyor.
 
-- macOS 14 Sonoma veya üstü (Liquid Glass görünümü için macOS 26+).
-- Kafa takibi destekleyen kulaklık: AirPods Pro, AirPods 3 ve sonrası,
-  AirPods Max, Beats Fit Pro ve benzerleri. Kulaklığın Mac'e bağlı olması
+Aynı sensör üç işe daha yarıyor:
+
+- **Odak modu**: 25 dakikalık bir oturum boyunca ekrana bakmak "kural";
+  uzaklaşınca ekran tamamen buğulanıp süre duruyor. Pomodoro'nun kendini
+  kandıramayan hâli.
+- **Sağlık**: başın uzun süre öne eğik kaldığında nazik bir hatırlatma.
+- **Erişilebilirlik**: kafayla kaydırma, kafayla imleç, sabit bakınca tıklama.
+
+Ücretsiz ve açık kaynak. Veri cihazdan çıkmıyor; istatistikler yerel bir
+JSON dosyasında.
+
+## Kurulum
+
+### Hazır paket (önerilen)
+
+1. [Releases](https://github.com/Voxyfy/headfocus/releases) sayfasından
+   en yeni `HeadFocus-x.y.z.dmg` dosyasını indir.
+2. DMG'yi aç, **HeadFocus**'u **Applications** klasörüne sürükle.
+3. Uygulamayı aç. Dock'ta görünmez; menü çubuğunda baş silüeti simgesi belirir.
+4. AirPods'u tak. İlk veri geldiğinde macOS **Hareket ve Fitness** izni
+   sorar; "İzin ver" de. Menüdeki ilk satır "Bağlı · yön … · eğim …" olunca
+   çalışıyor demektir.
+
+Paket Developer ID ile imzalı ve Apple noter onaylı; Gatekeeper uyarısı
+vermez. Açılışta otomatik başlaması için menüden **Açılışta başlat**.
+
+### İsteğe bağlı izinler
+
+| İzin | Ne için | Nerede |
+| --- | --- | --- |
+| Hareket ve Fitness | Kafa yönü (zorunlu) | İlk açılışta sorulur |
+| Ekran Kaydı | Yarıçaplı bulanıklık (Bulanıklık menüsünde px seçince) | Sistem Ayarları → Gizlilik ve Güvenlik → Ekran Kaydı |
+| Erişilebilirlik | Kafayla kaydırma, masaüstü geçişi, imleç | Menü → Kafa hareketleri → Erişilebilirlik izni ver… |
+| Bildirimler | Odak bitince ve duruş uyarısında | İlk açılışta sorulur |
+
+Hiçbirini vermezsen sistem camı kipinde yan bulanıklık ve odak modu yine çalışır.
+
+### Gereksinimler
+
+- macOS 14 Sonoma veya üstü. Liquid Glass görünümü için macOS 26+.
+- Kafa takibi destekleyen kulaklık: AirPods Pro (tüm nesiller), AirPods 3 ve
+  sonrası, AirPods Max, Beats Fit Pro ve benzerleri. Mac'e bağlı olması
   yeterli, ses çalması gerekmiyor.
-- Xcode komut satırı araçları (derlemek için).
+- Apple silicon önerilir; Intel'de de çalışır, yarıçaplı bulanıklık daha
+  çok CPU harcar.
 
-## Derleme ve çalıştırma
+### Kaldırma
+
+`/Applications/HeadFocus.app` dosyasını çöpe at. Ayarlar
+`~/Library/Preferences/com.batuhanhaymana.headfocus.plist`, istatistikler
+`~/Library/Application Support/HeadFocus/` altında; istersen onları da sil.
+
+## Hızlı başlangıç
+
+1. Menü çubuğundaki simgeye tıkla, **Ekran boyutu**'nu seç (dizüstü /
+   masaüstü / büyük ekran). Eşikler buna göre ayarlanır.
+2. Ekranın ortasına bakıp **Düz bakışı sıfırla** (⌃⌥R). Kulaklık her
+   bağlandığında bu kendiliğinden olur.
+3. Kafanı sağa çevir: sol taraf buğulanmalı. Az geliyorsa **Hassasiyet →
+   Yüksek**, çok geliyorsa **Bulanıklık** menüsünden daha küçük bir yarıçap.
+4. **Odak modu → 25 dakika** ile bir oturum başlat; ne üzerinde çalıştığını
+   yaz, ekrandan uzaklaşıp geri dönünce hatırlatılır.
+
+## Kaynaktan derleme
 
 ```sh
-./build.sh
+git clone https://github.com/Voxyfy/headfocus.git
+cd headfocus
+./build.sh            # build/HeadFocus.app
 open build/HeadFocus.app
 ```
 
-Betik `swift build` ile derleyip ikiliyi `build/HeadFocus.app` paketine
-koyar, simgeyi ve Info.plist'i ekler, Keychain'de Apple Development
-sertifikası varsa onunla, yoksa geçici imzayla imzalar. Uygulama Dock'ta
-görünmez, yalnızca menü çubuğunda kulaklık simgesi olarak durur.
-
-İlk açılışta iki izin sorulur:
-
-- **Hareket ve Fitness**: kulaklıktan kafa yönü okumak için. Reddedilirse
-  uygulama hiçbir şey yapamaz.
-- **Ekran Kaydı**: yalnızca ayarlanabilir yarıçaplı bulanıklık kipinde
-  (aşağıda). Sistem camı kipinde gerekmez.
-
-Geçici imzayla derlenen sürümde bu izinler her derlemeden sonra yeniden
-sorulur; geliştirici sertifikasıyla imzalanınca kalıcı olur.
+Xcode komut satırı araçları yeterli, Xcode projesi yok (SwiftPM). Betik
+derleyip ikiliyi bir .app paketine koyar, simgeyi ve Info.plist'i ekler,
+Keychain'de Apple Development sertifikası varsa onunla, yoksa geçici
+imzayla imzalar. Geçici imzada izinler her derlemede yeniden sorulur.
 
 ## Yayınlama
 
 ```sh
-./release.sh 0.2.0            # build/HeadFocus-0.2.0.dmg
+./release.sh 0.2.0                # build/HeadFocus-0.2.0.dmg
 GH_RELEASE=1 ./release.sh 0.2.0   # + GitHub Release (gh gerekir)
 ```
 
-Betik DMG üretir; Keychain'de **Developer ID Application** sertifikası varsa
-hardened runtime ile imzalar, `headfocus-notary` adlı notarytool profili
-varsa Apple'a noter onayına gönderip mührü basar. İkisi de yoksa DMG yine
-çıkar ama başka Mac'lerde Gatekeeper uyarısı verir. Tek seferlik hazırlık
-betiğin başındaki yorumda.
-
-Kurulum (kullanıcı tarafı): DMG'yi aç, HeadFocus'u Applications'a sürükle,
-ilk açılışta Hareket ve Fitness iznini ver. Yarıçaplı bulanıklık için
-Ekran Kaydı, kafa hareketleri için Erişilebilirlik izni ayrıca sorulur.
+Betik sürümü Info.plist'e yazar, derler, Keychain'de **Developer ID
+Application** sertifikası varsa hardened runtime ile imzalar, DMG üretir,
+`headfocus-notary` adlı notarytool profili varsa Apple'a gönderip mührü
+basar. Tek seferlik hazırlık betiğin başındaki yorumda. Noter onayı ilk
+gönderimlerde bir saati bulabiliyor.
 
 ## Menü
 
@@ -108,7 +158,7 @@ jiroskoptan birikiyor ve zamanla kayıyor. Bu yüzden:
 - Kafa sabitken ve referansa 25° içinde bakarken referans yavaşça o yöne
   kayar (yaklaşık 6 saniyelik zaman sabiti). Varsayım: zamanın çoğunda
   ekrana bakıyorsun. Bedeli: yan ekrana dakikalarca sabit bakınca referans
-  oraya kayar; ⌘R ile düzelir.
+  oraya kayar; ⌃⌥R ile düzelir.
 - Yukarı bakış hiçbir yerde sayılmaz, büyük ekranın üstüne bakmak kafayı
   kaldırır.
 
@@ -151,7 +201,7 @@ Süre bitince ses ve bildirim. Kalan süre menü çubuğunda görünür.
 ## Bilinen sınırlar
 
 - Yalnızca macOS ve yalnızca Apple'ın kafa takibi destekleyen kulaklıkları.
-- Çoklu ekranda tüm ekranlar aynı anda bulanır; ekran seçimi yok.
+- Çoklu ekranda varsayılan tüm ekranlar; Görünüm → Hangi ekranlar ile daraltılır.
 - Yarıçaplı kip sürekli ekran yakalar; pil ve GPU kullanımı sistem
   camından yüksektir.
 - Rahatsız Etmeyin için Kısayollar'da iki kısayol elle oluşturulmalı.

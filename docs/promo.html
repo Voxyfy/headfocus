@@ -1,0 +1,73 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:900px;overflow:hidden;background:#0b0b14;font-family:-apple-system,"SF Pro Display","SF Pro Text",Helvetica,Arial,sans-serif;color:#fff}
+.bg{position:absolute;inset:0;background:
+ radial-gradient(1200px 700px at 15% 10%,#3a2a6b 0%,transparent 60%),
+ radial-gradient(900px 600px at 90% 90%,#5a2d6e 0%,transparent 55%),
+ linear-gradient(135deg,#141528 0%,#1e1a3c 50%,#2b1c45 100%)}
+.menubar{position:absolute;top:0;left:0;right:0;height:30px;background:rgba(10,10,18,.55);backdrop-filter:blur(20px);display:flex;align-items:center;padding:0 18px;font-size:13px;color:#e8e8f0;gap:22px}
+.menubar .apple{font-size:15px}
+.menubar .right{margin-left:auto;display:flex;gap:16px;align-items:center}
+.pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:2px 9px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
+.head{width:12px;height:12px;position:relative}
+.head:before{content:"";position:absolute;left:3px;top:0;width:6px;height:6px;border-radius:50%;background:#fff}
+.head:after{content:"";position:absolute;left:0;bottom:0;width:12px;height:5px;border-radius:3px;background:#fff}
+.win{position:absolute;left:110px;top:90px;width:1380px;height:760px;border-radius:16px;background:#1c1d2a;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06);overflow:hidden}
+.titlebar{height:44px;background:#252637;display:flex;align-items:center;padding:0 16px;gap:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.dot{width:12px;height:12px;border-radius:50%}
+.titlebar .name{margin-left:14px;font-size:13px;color:#b9bacb}
+.side{position:absolute;left:0;top:44px;bottom:0;width:250px;background:#1f2030;border-right:1px solid rgba(255,255,255,.05);padding:18px 16px;font-size:13px;color:#8f92ad}
+.side div{padding:7px 10px;border-radius:7px;margin-bottom:2px}
+.side .on{background:rgba(255,255,255,.08);color:#fff}
+.doc{position:absolute;left:250px;top:44px;right:0;bottom:0;padding:56px 90px;color:#d7d8e6}
+.doc h1{font-size:34px;font-weight:700;letter-spacing:-.4px;margin-bottom:18px;color:#fff}
+.doc p{font-size:17px;line-height:1.7;margin-bottom:18px;max-width:1000px}
+.doc .muted{color:#8f92ad}
+.blur{position:absolute;top:0;bottom:0;right:0;width:46%;backdrop-filter:blur(22px) saturate(1.2);-webkit-backdrop-filter:blur(22px) saturate(1.2);background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.07) 40%,rgba(255,255,255,.10) 100%);
+ -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 220px);mask-image:linear-gradient(90deg,transparent 0,#000 220px);border-left:1px solid rgba(255,255,255,.0)}
+.edge{position:absolute;top:0;bottom:0;right:calc(46% - 120px);width:2px;background:linear-gradient(180deg,rgba(255,255,255,.0),rgba(255,255,255,.55),rgba(255,255,255,.0))}
+.card{position:absolute;right:120px;top:300px;width:440px;padding:26px 28px;border-radius:22px;background:rgba(20,20,34,.55);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);box-shadow:0 20px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.18),0 0 0 1px rgba(255,255,255,.10)}
+.card .eyebrow{font-size:12px;letter-spacing:1.8px;color:#b8b9d6;text-transform:uppercase}
+.card .time{font-size:64px;font-weight:700;letter-spacing:-2px;font-variant-numeric:tabular-nums;margin:6px 0 2px;color:#fff}
+.card .sub{font-size:15px;color:#c9cadf}
+.bar{height:6px;border-radius:3px;background:rgba(255,255,255,.14);margin-top:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:62%;background:linear-gradient(90deg,#8b7cf6,#c084fc);border-radius:3px}
+.row{display:flex;gap:10px;margin-top:20px}
+.chip{flex:1;border-radius:12px;padding:10px 12px;background:rgba(255,255,255,.08);font-size:12px;color:#c9cadf}
+.chip b{display:block;white-space:nowrap;font-size:19px;color:#fff;font-weight:600;letter-spacing:-.5px;margin-top:2px}
+.brand{position:absolute;left:110px;bottom:34px;display:flex;align-items:center;gap:16px}
+.brand .icon{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#1a1c3d,#52307a);position:relative;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.brand .icon:before{content:"";position:absolute;left:19px;top:10px;width:18px;height:18px;border-radius:50%;background:#f4f4fb}
+.brand .icon:after{content:"";position:absolute;left:13px;bottom:8px;width:30px;height:14px;border-radius:8px;background:#f4f4fb}
+.brand .icon i{position:absolute;right:0;top:0;bottom:0;width:48%;background:rgba(255,255,255,.28);border-radius:0 14px 14px 0;backdrop-filter:blur(4px)}
+.brand h2{font-size:30px;font-weight:700;letter-spacing:-.6px}
+.brand p{font-size:15px;color:#b8b9d6;margin-top:2px}
+.arrow{position:absolute;left:640px;bottom:300px;display:flex;align-items:center;gap:12px;color:#fff;font-size:15px;opacity:.9}
+.arrow span{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px}
+</style></head><body>
+<div class="bg"></div>
+<div class="win">
+  <div class="titlebar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="name">Tez taslağı — 3. Bölüm</span></div>
+  <div class="side"><div>Giriş</div><div>Literatür</div><div class="on">3. Bölüm · Yöntem</div><div>Bulgular</div><div>Tartışma</div><div>Kaynakça</div></div>
+  <div class="doc">
+    <h1>3. Yöntem</h1>
+    <p>Bu bölümde araştırmanın tasarımı, örneklem seçimi ve veri toplama araçları açıklanmaktadır. Çalışma, karma yöntem deseniyle yürütülmüş; nicel veriler anket, nitel veriler yarı yapılandırılmış görüşmelerle toplanmıştır.</p>
+    <p>Örneklem, 2025–2026 öğretim yılında üç farklı üniversitede öğrenim gören 412 lisans öğrencisinden oluşmaktadır. Katılımcıların seçiminde amaçlı örnekleme yaklaşımı benimsenmiş, bölüm ve sınıf düzeyi dengesi gözetilmiştir.</p>
+    <p>Veri toplama sürecinde öncelikle pilot uygulama gerçekleştirilmiş; anlaşılırlık ve süre açısından geri bildirimler doğrultusunda ölçek maddeleri yeniden düzenlenmiştir. Ana uygulama altı hafta sürmüştür.</p>
+    <p class="muted">Görüşme kayıtları çözümlenerek tematik analize tabi tutulmuş, kodlayıcılar arası güvenirlik için iki bağımsız araştırmacı tarafından kodlanmıştır.</p>
+    <p class="muted">Etik kurul onayı 14 Mart 2026 tarihinde alınmış, katılımcılardan bilgilendirilmiş onam formu ile izin toplanmıştır.</p>
+  </div>
+  <div class="blur"></div>
+  <div class="edge"></div>
+  <div class="card">
+    <div class="eyebrow">Odak modu</div>
+    <div class="time">24:31</div>
+    <div class="sub">Kaldığın yer: 3. Bölüm, yöntem paragrafı</div>
+    <div class="bar"><i></i></div>
+    <div class="row"><div class="chip">Bugün<b>2 sa 05 dk</b></div><div class="chip">Uzaklaşma<b>3</b></div><div class="chip">En uzun<b>41 dk</b></div></div>
+  </div>
+</div>
+<div class="menubar"><span class="apple"></span><span style="font-weight:600">Pages</span><span>Dosya</span><span>Düzen</span><span>Görüntü</span><div class="right"><span class="pill"><span class="head"></span>24:31</span><span>Cmt 10:42</span></div></div>
+<div class="brand"><div class="icon"><i></i></div><div><h2>HeadFocus</h2><p>Kafanı çevir, ekranın öbür tarafı buğulansın. Odaklan, uzaklaşınca süre dursun.</p></div></div>
+</body></html>
