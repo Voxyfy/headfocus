@@ -12,6 +12,10 @@ let package = Package(
                 .linkedFramework("CoreMotion"),
                 .linkedFramework("AppKit"),
                 .linkedFramework("UserNotifications"),
+                .linkedFramework("ScreenCaptureKit"),
+                .linkedFramework("CoreImage"),
+                .linkedFramework("Carbon"),
+                .linkedFramework("ServiceManagement"),
             ]
         ),
     ]

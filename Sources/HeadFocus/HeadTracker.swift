@@ -16,6 +16,8 @@ final class HeadTracker: NSObject, CMHeadphoneMotionManagerDelegate {
         var yaw: Double
         /// Referansa göre yukarı/aşağı, derece. Aşağı negatif.
         var pitch: Double
+        /// Toplam dönüş hızı, rad/s. Ani hareketleri ayırt etmek için.
+        var rate: Double
     }
 
     var onPose: ((Pose) -> Void)?
@@ -57,23 +59,55 @@ final class HeadTracker: NSObject, CMHeadphoneMotionManagerDelegate {
         }
         referenceYaw = raw.yaw
         referencePitch = raw.pitch
+        lastSample = nil
     }
+
+    private var lastSample: TimeInterval?
+
+    /// Kayma telafisi: kafa sabitken ve ekrana yakın bir yöne bakarken
+    /// referans yavaşça o yöne kayar. Varsayım: kullanıcı zamanın çoğunda
+    /// ekrana bakıyor, uzun süre sabit duran yön "düz bakış"tır. Böylece
+    /// jiroskop kayması kendiliğinden düzeliyor; sık sık elle sıfırlamak
+    /// gerekmiyor. Bedeli: ikinci ekrana dakikalarca sabit bakan kullanıcıda
+    /// referans oraya kayar; ⌘R ile geri alınır.
+    private let driftTau: Double = 6          // saniye; ~3τ sonra tamamen oturur
+    private let driftMaxAngle: Double = 25    // bu açıdan uzağa kayma yapılmaz
+    private let driftMaxPitch: Double = 8
+    private let stillRate: Double = 0.12      // rad/s; altı "kafa sabit"
 
     private func handle(_ motion: CMDeviceMotion) {
         let yaw = motion.attitude.yaw * 180 / .pi
         let pitch = motion.attitude.pitch * 180 / .pi
         lastRaw = (yaw, pitch)
 
+        let now = motion.timestamp
+        let dt = lastSample.map { min(max(now - $0, 0), 0.5) } ?? 0
+        lastSample = now
+
         if referenceYaw == nil {
             referenceYaw = yaw
             referencePitch = pitch
         }
 
-        let pose = Pose(
-            yaw: Self.wrap(yaw - (referenceYaw ?? yaw)),
-            pitch: pitch - (referencePitch ?? pitch)
-        )
-        onPose?(pose)
+        var relYaw = Self.wrap(yaw - (referenceYaw ?? yaw))
+        var relPitch = pitch - (referencePitch ?? pitch)
+
+        let r = motion.rotationRate
+        let rate = (r.x * r.x + r.y * r.y + r.z * r.z).squareRoot()
+        if rate < stillRate, abs(relYaw) < driftMaxAngle, dt > 0 {
+            let k = 1 - exp(-dt / driftTau)
+            referenceYaw = (referenceYaw ?? yaw) + relYaw * k
+            relYaw = Self.wrap(yaw - referenceYaw!)
+            // Eğim için dar pencere: öne eğik duruş referansa yerleşmesin,
+            // yoksa duruş uyarısı hiç çalışmaz. Eğimin kayması yaw kadar
+            // hızlı değil (yerçekimi referansı var), dar pencere yetiyor.
+            if abs(relPitch) < driftMaxPitch {
+                referencePitch = (referencePitch ?? pitch) + relPitch * k
+                relPitch = pitch - referencePitch!
+            }
+        }
+
+        onPose?(Pose(yaw: relYaw, pitch: relPitch, rate: rate))
     }
 
     /// -180…180 aralığına sar; referansın öbür tarafına geçince 359 gibi
